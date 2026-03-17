@@ -1,0 +1,48 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+import os
+from time import sleep
+
+
+
+chrome_options = webdriver.ChromeOptions()
+user_data_dir = os.path.join(os.getcwd(), "chrome_profile")
+chrome_options.add_experimental_option('detach', True)
+chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
+
+driver = webdriver.Chrome(options=chrome_options)
+
+driver.get("https://appbrewery.github.io/gym/")
+
+join_button = driver.find_element(By.CLASS_NAME, value="Home_heroButton__3eeI3")
+join_button.click()
+
+
+wait = WebDriverWait(driver, 2)
+
+def retry(func, retries=7, description=None):
+    for i in range(retries):
+        print(f"Trying {description}. Attempt: {i + 1}")
+        try:
+            func()
+        except TimeoutException:
+            if i == retries -1:
+                raise
+            sleep(1)
+
+def loging_in():
+    login = driver.find_element(By.ID, value="submit-button")
+    login.click()
+
+    email_input = driver.find_element(By.ID, value="email-input")
+    email_input.clear()
+    email_input.send_keys("ahmed@test.com")
+
+    pass_input = driver.find_element(By.ID, value="password-input")
+    pass_input.clear()
+    pass_input.send_keys("ahmed.test")
+
+    wait.until(ec.presence_of_element_located((By.ID, "schedule-page")))
+
+retry(loging_in, description="login_in")
