@@ -103,3 +103,29 @@ print(f"New bookings: {booked_count}")
 print(f"New waitlist entries: {waitlist_count}")
 print(f"Already booked/waitlisted: {already_booked_count}")
 print(f"Total Tuesday & Thursday 6pm classes: {booked_count + waitlist_count + already_booked_count}")
+
+classes = 0
+classes_booked = 0
+
+print("\n--- DETAILED CLASS LIST ---")
+for class_detail in processed_classes:
+    print(f"  • {class_detail}")
+    classes += 1
+
+booking_link = driver.find_element(By.ID, "my-bookings-link")
+booking_link.click()
+
+amount_of_classes = driver.find_elements(By.CLASS_NAME, "MyBookings_bookingDetails__QG0l_")
+for booking in amount_of_classes:
+    print(booking.text)
+    classes_booked +=1
+
+print("--- VERIFICATION RESULT ---")
+print(f"Expected: {classes} bookings")
+print(f"Found: {classes_booked} bookings")
+
+if classes == classes_booked:
+    print("✅ SUCCESS: All bookings verified!")
+else:
+    print(f"MISMATCH: Missing {classes - classes_booked} booking")
+    print()
